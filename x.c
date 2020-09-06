@@ -1906,6 +1906,19 @@ run(void)
 	clock_gettime(CLOCK_MONOTONIC, &last);
 	lastblink = last;
 
+  char* home_dir = getenv("HOME");
+#define SCRIPT_NAME ".st.sh"
+  char* start_cmd = 
+    (char*)malloc(
+        sizeof(home_dir) * sizeof(char*) +
+        sizeof(SCRIPT_NAME) * sizeof(char*) +
+        sizeof(char*));
+
+  sprintf(start_cmd, "%s/%s", home_dir, SCRIPT_NAME);
+  char* sargs[1] = { start_cmd };
+  system(start_cmd);
+  free(start_cmd);
+
 	for (xev = actionfps;;) {
 		FD_ZERO(&rfd);
 		FD_SET(ttyfd, &rfd);
@@ -2033,6 +2046,8 @@ config_init(void)
 	db = XrmGetStringDatabase(resm);
 	for (p = resources; p < resources + LEN(resources); p++)
 		resource_load(db, p->name, p->type, p->dst);
+
+
 }
 
 void
